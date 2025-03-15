@@ -67,7 +67,7 @@ std::vector<double> eval(const parameters& params){
 
         k++;
 
-    }while(norm1(vec_subtract(x,x_old))>=params.eps_s and k<params.k_max and norm1(params.grad_func(x))>=params.eps_r);
+    }while(norm1(vec_subtract(x,x_old))>=params.eps_s && k<params.k_max && norm1(params.grad_func(x))>=params.eps_r);
     // stoping conditions: 1) step tolerance; 2) maximum number of iterations 3) residual tolerance
 
     if(k<params.k_max){
