@@ -1,3 +1,6 @@
+#ifndef TESTS_HPP
+#define TESTS_HPP
+
 #include <vector>
 #include <cmath>
 #include <functional>
@@ -48,3 +51,5 @@ Parameters test2() {
     test_params.sigma = 0.4;   // Slightly different sigma for Armijo condition
     return test_params;
 }
+
+#endif // TESTS_HPP
