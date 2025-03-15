@@ -3,11 +3,12 @@
 #include <cmath>
 #include <functional>
 #include "functions.hpp"
+#include "verbose.hpp"
 
 
 int main(){
 
-    // test parameters
+    // Define testing parameters
     parameters test_params;
     test_params.n = 2;
     test_params.func = [](const std::vector<double>& x) {
@@ -19,19 +20,17 @@ int main(){
             2 * x[0] + 4 * x[1]
         };
     };
-    test_params.eps_r = 1e-6;
+    test_params.eps_r = 1e-6;  
     test_params.eps_s = 1e-6;
     test_params.alpha_zero = 0.1; // set to 0.1 instead of 1. The method appears to be highly sensitive to this parameter.
     test_params.x0 = {0.0, 0.0};
     test_params.k_max = 100;
+    test_params.mu = 1e-3;
 
     // Run gradient descent
-    auto x_opt = eval(test_params);
-    std::cout << "-------------------------------------------------" << std::endl;
-    std::cout << "Optimized result: ";
-    print_vec(x_opt);
-    std::cout << "Minimum Function Value: " << test_params.func(x_opt) << std::endl;
-    std::cout << "-------------------------------------------------" << std::endl;
-    return 0;
+    std::vector<double> x_opt = eval(test_params, lr_exp_decay);
+
+    // Show results
+    verbose::show_results(x_opt, test_params);
 
 }
