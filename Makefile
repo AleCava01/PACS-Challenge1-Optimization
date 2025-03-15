@@ -19,11 +19,15 @@ $(EXEC): $(OBJECTS) | $(OBJ_DIR)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# create obj dir if it doesn't exists
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
+# cleaning rules
 clean:
 	$(RM) *.o $(EXEC) *.dat *.exe
 
 distclean: clean
-	$(RM) -r $(OBJ_DIR) $(EXEC)
+	$(RM) -r $(OBJ_DIR) $(EXEC) *.o
 	$(RM) $(EXEC) $(EXEC_MUPARSER)
 	$(RM) *~
