@@ -4,25 +4,13 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <functional>
-#include <optional>
+#include "parameters.hpp"
+#include "verbose.hpp"
 
 
-struct parameters
-{
-    std::function<double(const std::vector<double>&)> func;
-    std::function<std::vector<double>(const std::vector<double>&)> grad_func;
-    unsigned int n; // dimension
-    std::vector<double> x0; // initial guess
-    double eps_r; // residual tolerance
-    double eps_s; // step tolerance
-    unsigned k_max; // max number of iterations
-    double alpha_zero; // initial learning rate
-    std::optional<double> mu; // optional parameter for exponential and inverse decay methods
-};
+// --- UTILITY FUNCTIONS --------------------------------------------------------------
 
-// --- UTILITY FUNCTIONS -----------------------------------------------------------------
-
+// Function to subtract two vectors element-wise
 std::vector<double> vec_subtract(std::vector<double> &v1, std::vector<double> &v2){
     std::vector<double> result = v1;
     for(unsigned i=0; i<v1.size(); ++i){
@@ -31,17 +19,8 @@ std::vector<double> vec_subtract(std::vector<double> &v1, std::vector<double> &v
     return result;
 };
 
-double norm1(const std::vector<double>& vec){
-    // implements the L1 Norm
-    double norm = 0.0;
-    for(unsigned i=0; i<vec.size(); ++i){
-        norm += std::abs(vec[i]);
-    }
-    return norm;
-};
-
+// L2 Norm (Euclidean norm, sqrt of sum of squares of vector elements)
 double norm2(const std::vector<double>& vec){
-    // implements the L2 Norm
     double norm = 0.0;
     for(unsigned i=0; i<vec.size(); ++i){
         norm += vec[i]*vec[i];
@@ -49,6 +28,7 @@ double norm2(const std::vector<double>& vec){
     return std::sqrt(norm);
 };
 
+// Function to print a vector
 void print_vec(std::vector<double> x){
     for(int i=0; i<x.size()-1; ++i){
         std::cout <<  x[i] << " , ";
@@ -57,27 +37,32 @@ void print_vec(std::vector<double> x){
     std::cout << std::endl;
 }
 
-// --- CORE FUNCTIONS  -------------------------------------------------------------------
 
-// --- --- Learning Rate Update functions ------------------------------------------------
 
-void lr_exp_decay(double& alpha_k, unsigned& k, parameters& params){
+// --- LEARNING RATE UPDATE FUNCTIONS -----------------------------------------------
+
+// No update, keeps alpha constant
+void lr_constant(double& alpha_k, unsigned& k, Parameters& params, std::vector<double>& x){}
+
+// Exponential decay learning rate
+void lr_exp_decay(double& alpha_k, unsigned& k, Parameters& params, std::vector<double>& x){
     alpha_k = params.alpha_zero * std::exp(-(*params.mu) * k);
 }
-void lr_inv_decay(double& alpha_k, unsigned& k, parameters& params){
+
+// Inverse decay learning rate
+void lr_inv_decay(double& alpha_k, unsigned& k, Parameters& params, std::vector<double>& x){
     alpha_k = params.alpha_zero / (1+ (*params.mu) * k);
 }
-void lr_approx_line_search(double& alpha_k, unsigned& k, parameters& params){
-    // Armijo rule
-}
-void lr_constant(double& alpha_k, unsigned& k, parameters& params){
-    // does nothing
+
+// Approximate line search using Armijo rule
+void lr_approx_line_search(double& alpha_k, unsigned& k, Parameters& params, std::vector<double>& x){
+    
 }
 
-// --- --- Gradient descent implementation -----------------------------------------------
+// --- GRADIENT METHOD IMPLEMENTATION  ---------------------------------------------
 
 template <typename LRUpdate>
-std::vector<double> eval(parameters& params, LRUpdate alpha_update) {
+std::vector<double> eval(Parameters& params, LRUpdate alpha_update) {
     double alpha_k=params.alpha_zero;
     std::vector<double> x = params.x0;
     std::vector<double> x_old = x;
@@ -91,7 +76,7 @@ std::vector<double> eval(parameters& params, LRUpdate alpha_update) {
             x[i] -= alpha_k * grad_result[i]; // x vector update, see gradient method algorithm
         }
 
-        alpha_update(alpha_k, k, params);
+        alpha_update(alpha_k, k, params,x);
 
         /* DEBUGGING
         print_vec(x); // x vector progression
@@ -104,12 +89,8 @@ std::vector<double> eval(parameters& params, LRUpdate alpha_update) {
     }while(norm2(vec_subtract(x,x_old))>=params.eps_s && k<params.k_max && norm2(params.grad_func(x))>=params.eps_r);  // stoping conditions: 1) step tolerance; 2) maximum number of iterations 3) residual tolerance
 
 
-    if(k<params.k_max){
-        std::cout << "The method has converged in " << k << " iterations." << std::endl;
-    }
-    else{
-        std::cout << "The maximum number of iterations (" << params.k_max << ") has been reached." << std::endl;
-    }
+    verbose::iterations_output(k, params.k_max);
+    
 
     return x;
 
