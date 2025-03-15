@@ -63,6 +63,7 @@ std::vector<double> eval(const parameters& params){
         */
 
         k++;
+
     }while(norm1(vec_subtract(x,x_old))>=params.eps_s and k<params.k_max and norm1(params.grad_func(x))>=params.eps_r);
     // stoping conditions: 1) step tolerance; 2) maximum number of iterations 3) residual tolerance
 
@@ -100,7 +101,7 @@ int main(){
     };
     test_params.eps_r = 1e-6;
     test_params.eps_s = 1e-6;
-    test_params.alpha_zero = 0.1;
+    test_params.alpha_zero = 0.1; // set to 0.1 instead of 1. The method appears to be highly sensitive to this parameter.
     test_params.x0 = {0.0, 0.0};
     test_params.k_max = 100;
 
