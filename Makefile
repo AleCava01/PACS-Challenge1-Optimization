@@ -26,8 +26,7 @@ $(OBJ_DIR):
 # cleaning rules
 clean:
 	$(RM) *.o $(EXEC) *.dat *.exe
-
-distclean: clean
+	$(RM) $(wildcard $(SRC_DIR)/*.exe)
 	$(RM) -r $(OBJ_DIR) $(EXEC) *.o
 	$(RM) $(EXEC) $(EXEC_MUPARSER)
 	$(RM) *~

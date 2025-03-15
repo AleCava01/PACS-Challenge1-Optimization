@@ -2,36 +2,45 @@
 #include <vector>
 #include <cmath>
 #include <functional>
+#include<chrono>
 #include "../include/parameters.hpp"
 #include "../include/functions.hpp"
 #include "../include/verbose.hpp"
+#include "../include/tests.hpp"
 
+int main() {
 
-int main(){
+    Parameters test_params = test1(); // test1 and test2 are available
 
-    // Define testing parameters
-    Parameters test_params;
-    test_params.n = 2;
-    test_params.func = [](const std::vector<double>& x) {
-        return 2 * x[0] * x[1] + 4 * std::pow(x[0], 4) + std::pow(2 * x[1], 2) + 2 * x[0];
-    };
-    test_params.grad_func = [](const std::vector<double>& x) -> std::vector<double> {
-        return {
-            2 * x[1] + 16 * std::pow(x[0], 3) + 2,
-            2 * x[0] + 4 * x[1]
-        };
-    };
-    test_params.eps_r = 1e-6;  
-    test_params.eps_s = 1e-6;
-    test_params.alpha_zero = 0.1; // set to 0.1 instead of 1. The method appears to be highly sensitive to this parameter.
-    test_params.x0 = {0.0, 0.0};
-    test_params.k_max = 100;
-    test_params.mu = 1e-3;
+    verbose::print_header_result();
 
-    // Run gradient descent
-    std::vector<double> x_opt = eval(test_params, lr_exp_decay);
+    // INV DECAY
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<double> x_opt_inv_decay = eval(test_params, lr_inv_decay);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_inv_decay = end - start;
+    verbose::show_results("Inverse Decay", x_opt_inv_decay, test_params, elapsed_inv_decay.count());
 
-    // Show results
-    verbose::show_results(x_opt, test_params);
+    // EXP DECAY
+    start = std::chrono::high_resolution_clock::now();
+    std::vector<double> x_opt_exp_decay = eval(test_params, lr_exp_decay);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_exp_decay = end - start;
+    verbose::show_results("Exponential Decay", x_opt_exp_decay, test_params, elapsed_exp_decay.count());
 
+    // CONSTANT LEARNING RATE
+    start = std::chrono::high_resolution_clock::now();
+    std::vector<double> x_opt_constant = eval(test_params, lr_constant);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_constant = end - start;
+    verbose::show_results("Constant Rate", x_opt_constant, test_params, elapsed_constant.count());
+
+    // APPROXIMATE LINE SEARCH - ARMIJO RULE
+    start = std::chrono::high_resolution_clock::now();
+    std::vector<double> x_opt_approx_ls = eval(test_params, lr_approx_line_search);
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed_approx_ls = end - start;
+    verbose::show_results("Approx Line Search", x_opt_approx_ls, test_params, elapsed_approx_ls.count());
+
+    return 0;
 }

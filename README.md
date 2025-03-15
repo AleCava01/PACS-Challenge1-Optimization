@@ -5,3 +5,4 @@ With this challenge we weke tasked to implement a gradient-based optimization me
 ## Current issues / Observations
 - The method is highly sensitive to the $\alpha_0$ parameter when using the exponential or inverse decay learning rate update methods.
 - Exponential decay and inverse decay require a very small $\mu$, significantly lower than the value suggested in the challenge description.
+- Armijo Rule has to be seen again, it's working very badly
