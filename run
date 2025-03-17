@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Clean previous builds
+make clean
+
+# Compile the project
+make
+
+# Execute the program
+./main

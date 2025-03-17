@@ -84,11 +84,11 @@ void lr_approx_line_search(double& alpha_k, size_t& k, Parameters& params, std::
 // --- GRADIENT METHOD IMPLEMENTATION  ---------------------------------------------
 
 template <typename LRUpdate>
-std::vector<double> eval(Parameters& params, LRUpdate alpha_update) {
+std::vector<double> eval(Parameters& params, LRUpdate alpha_update, size_t& k) {
+    k = 0; // reset iterations counter
     double alpha_k=params.alpha_zero;
     std::vector<double> x = params.x0;
     std::vector<double> x_old = x;
-    size_t k = 0; // iterations counter
 
     do{
         x_old = x; // make of x before updating it

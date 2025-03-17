@@ -14,26 +14,29 @@ std::string vectorToString(const std::vector<double>& vec);
 
 namespace verbose {
     void print_header_result(){
-        std::cout << "******************************************************************************************************************" << std::endl;
+        std::cout << "***************************************************************************************************************************" << std::endl;
         std::cout << "OPTIMIZATION RESULTS " << std::endl;
+        std::cout << "***************************************************************************************************************************" << std::endl;
         // Print the headers with fixed width for neat columns
         std::cout << std::setw(30) << std::left << "Method"
-                  << std::setw(40) << std::left << "x_opt"
+                  << std::setw(30) << std::left << "x_opt"
                   << std::setw(20) << std::left << "min value"
-                  << std::setw(20) << std::left << "residual"
-                  << std::setw(15) << std::left << "time" << std::endl;
-        std::cout << "------------------------------------------------------------------------------------------------------------------" << std::endl;
+                  << std::setw(15) << std::left << "residual"
+                  << std::setw(15) << std::left << "time" 
+                  << std::setw(15) << std::left << "iterations" << std::endl;
+        std::cout << "---------------------------------------------------------------------------------------------------------------------------" << std::endl;
     }
 
-    void show_results(const std::string& method_name, const std::vector<double>& x_opt, const Parameters& params, const double time) {
+    void show_results(const std::string& method_name, const std::vector<double>& x_opt, const Parameters& params, const double time, const size_t iter) {
         // Print results with fixed width for proper column alignment
         std::cout << std::setw(30) << std::left << method_name
-                  << std::setw(40) << std::left << vectorToString(x_opt)
+                  << std::setw(30) << std::left << vectorToString(x_opt)
                   << std::setw(20) << std::fixed << std::setprecision(6) << params.func(x_opt)
-                  << std::setw(20) << std::fixed << std::setprecision(6) << norm2(params.grad_func(x_opt))
+                  << std::setw(15) << std::fixed << std::setprecision(6) << norm2(params.grad_func(x_opt))
                   << std::setw(15) << std::fixed << std::setprecision(6) << time
+                  << std::setw(15) << std::left << std::setprecision(6) << iter
                   << std::endl;
-        std::cout << "------------------------------------------------------------------------------------------------------------------" << std::endl;
+        std::cout << "---------------------------------------------------------------------------------------------------------------------------" << std::endl;
     }
 
     void iterations_output(const size_t k, const size_t k_max){
