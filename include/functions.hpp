@@ -6,49 +6,7 @@
 #include <cmath>
 #include "parameters.hpp"
 #include "verbose.hpp"
-
-
-// --- UTILITY FUNCTIONS --------------------------------------------------------------
-
-// Function to subtract two vectors element-wise
-std::vector<double> vec_subtract(const std::vector<double>& v1, const std::vector<double>& v2){
-    std::vector<double> result = v1;
-    for(size_t i=0; i<v1.size(); ++i){
-        result[i] -= v2[i];
-    }
-    return result;
-};
-
-// L2 Norm (Euclidean norm, sqrt of sum of squares of vector elements)
-double norm2(const std::vector<double>& vec){
-    double norm = 0.0;
-    for(size_t i=0; i<vec.size(); ++i){
-        norm += vec[i]*vec[i];
-    }
-    return std::sqrt(norm);
-};
-
-// Function to print a vector
-void print_vec(const std::vector<double>& x){
-    if (x.empty()){ // Empty vector case
-        std::cout << "[]" << std::endl; 
-        return;
-    }
-    std::cout << "[";
-    for(size_t i=0; i<x.size()-1; ++i){
-        std::cout <<  x[i] << " , ";
-    }
-    std::cout << x[x.size()-1] << "]" << std::endl;
-};
-
-// Function to multiply a vector by a scalar
-std::vector<double> vec_scaler(std::vector<double> vec, double x){
-    for(size_t i=0; i<vec.size(); ++i){
-        vec[i] *= x;
-    }
-    return vec;
-};
-
+#include "utility_functions.hpp"
 
 // --- LEARNING RATE UPDATE FUNCTIONS -----------------------------------------------
 
@@ -65,26 +23,25 @@ void lr_inv_decay(double& alpha_k, size_t& k, Parameters& params, std::vector<do
     alpha_k = params.alpha_zero / (1+ (*params.mu) * k);
 }
 
-
 // Approximate line search using Armijo rule
 void lr_approx_line_search(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x) {
-    
+    alpha_k = 1;
     std::vector<double> grad = params.grad_func(x);
-    double grad_norm_sq = std::pow(norm2(grad), 2);
+    double grad_norm_sq = 0;
+    for(size_t i = 0; i<grad.size(); ++i){grad_norm_sq += (grad[i]*grad[i]);}
     double alpha_min = 1e-3;
-    
-    while (params.func(x) - params.func(vec_subtract(x, vec_scaler(grad, alpha_k))) < (*params.sigma) * alpha_k * grad_norm_sq && alpha_k > alpha_min) {
+    auto armijo_condition = [&params](const auto& x, const auto& grad, double alpha_k, double grad_norm_sq) {
+        return params.func(x) - params.func(vec_subtract(x, vec_scaler(grad, alpha_k))) >= (*params.sigma) * alpha_k * grad_norm_sq;
+    };
+    while (!armijo_condition(x, grad, alpha_k,grad_norm_sq) && alpha_k > alpha_min) {
         alpha_k /= 2;
-        
-        grad = params.grad_func(x);
-        grad_norm_sq = std::pow(norm2(grad), 2);
     }
 }
 
 // --- GRADIENT METHOD IMPLEMENTATION  ---------------------------------------------
 
-template <typename LRUpdate>
-std::vector<double> eval(Parameters& params, LRUpdate alpha_update, size_t& k) {
+template <typename LRUpdateMethod>
+std::vector<double> eval(Parameters& params, LRUpdateMethod alpha_update, size_t& k) {
     k = 0; // reset iterations counter
     double alpha_k=params.alpha_zero;
     std::vector<double> x = params.x0;
@@ -108,6 +65,40 @@ std::vector<double> eval(Parameters& params, LRUpdate alpha_update, size_t& k) {
 
     //verbose::iterations_output(k, params.k_max);
     
+    return x;
+
+}
+
+
+// ADAM
+std::vector<double> adam(Parameters& params, size_t& k, double beta1, double beta2, double alpha) {
+    k = 0;
+    double eps = 1e-8;
+    std::vector<double> m = {0,0};
+    std::vector<double> v = {0,0};
+    auto m_scaled = m;
+    auto v_scaled = v;
+    auto x = params.x0;
+    std::vector<double> grad;
+    std::vector<double> x_old = x;
+    do{
+        k++;
+        x_old = x;
+        grad = params.grad_func(x);
+
+        m = vec_sum(vec_scaler(m,beta1), vec_scaler(grad,1-beta1));
+        ew_square(grad); // turns grad into the hadamard product of grad * grad.
+        v = vec_sum(vec_scaler(v,beta2), vec_scaler(grad,1-beta2));
+
+        m_scaled = vec_scaler(m,(1/(1-std::pow(beta1,k))));
+        v_scaled = vec_scaler(v,(1/(1-std::pow(beta2,k))));
+
+        for(size_t i=0; i<x.size(); ++i){
+            x[i] -= alpha*m_scaled[i]/(std::sqrt(v_scaled[i])+eps);
+        }
+
+    }while(norm2(vec_subtract(x,x_old))>=params.eps_s && k<params.k_max && norm2(params.grad_func(x))>=params.eps_r);
+
     return x;
 
 }

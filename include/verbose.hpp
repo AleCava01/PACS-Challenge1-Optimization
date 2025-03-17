@@ -4,8 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
-#include <string>
-#include <sstream>
 #include "parameters.hpp"
 
 void print_vec(const std::vector<double>& x);
@@ -13,10 +11,13 @@ double norm2(const std::vector<double>& vec);
 std::string vectorToString(const std::vector<double>& vec);
 
 namespace verbose {
+    void dotted_separator(){
+        std::cout << "***************************************************************************************************************************" << std::endl;
+    }
     void print_header_result(){
-        std::cout << "***************************************************************************************************************************" << std::endl;
+        dotted_separator();
         std::cout << "OPTIMIZATION RESULTS " << std::endl;
-        std::cout << "***************************************************************************************************************************" << std::endl;
+        dotted_separator();
         // Print the headers with fixed width for neat columns
         std::cout << std::setw(30) << std::left << "Method"
                   << std::setw(30) << std::left << "x_opt"
@@ -67,21 +68,6 @@ namespace verbose {
     }
 }
 
-#include "functions.hpp"
-
-std::string vectorToString(const std::vector<double>& vec) {
-    std::stringstream ss;
-    ss << "["; 
-    
-    for (size_t i = 0; i < vec.size(); ++i) {
-        ss << std::fixed << std::setprecision(6) << vec[i]; // Precision for vector elements
-        if (i != vec.size() - 1) {
-            ss << ", "; 
-        }
-    }
-
-    ss << "]"; 
-    return ss.str(); 
-}
+#include "utility_functions.hpp"
 
 #endif // VERBOSE_HPP

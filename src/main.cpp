@@ -2,48 +2,62 @@
 #include <vector>
 #include <cmath>
 #include <functional>
-#include<chrono>
+#include <chrono>
+#include <string>
 #include "../include/parameters.hpp"
 #include "../include/functions.hpp"
 #include "../include/verbose.hpp"
 #include "../include/tests.hpp"
 
+template <typename LRUpdateMethod>
+void test_method(std::string test_name, Parameters test_params, LRUpdateMethod method);
+
 int main() {
+
     // TESTING PARAMETERS
     Parameters test_params = test1(); // test1 and test2 are available
 
     // EVAL FUNCTION WITH DIFFERENT METHODS
 
     verbose::print_header_result();
-    size_t iter = 0; // iterations counter
 
     // Inverse decay method
-    auto start = std::chrono::high_resolution_clock::now();
-    std::vector<double> x_opt_inv_decay = eval(test_params, lr_inv_decay, iter);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed_inv_decay = end - start;
-    verbose::show_results("Inverse Decay", x_opt_inv_decay, test_params, elapsed_inv_decay.count(), iter);
+    test_method("Inverse Decay", test_params, lr_inv_decay);
 
     // Exponential decay method
-    start = std::chrono::high_resolution_clock::now();
-    std::vector<double> x_opt_exp_decay = eval(test_params, lr_exp_decay, iter);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed_exp_decay = end - start;
-    verbose::show_results("Exponential Decay", x_opt_exp_decay, test_params, elapsed_exp_decay.count(), iter);
+    test_method("Exponential Decay", test_params, lr_exp_decay);
 
     // Constant Learning rate method
-    start = std::chrono::high_resolution_clock::now();
-    std::vector<double> x_opt_constant = eval(test_params, lr_constant, iter);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed_constant = end - start;
-    verbose::show_results("Constant Rate", x_opt_constant, test_params, elapsed_constant.count(), iter);
+    test_method("Constant Rate", test_params, lr_constant);
 
     // APPROXIMATE LINE SEARCH - ARMIJO RULE
-    start = std::chrono::high_resolution_clock::now();
-    std::vector<double> x_opt_approx_ls = eval(test_params, lr_approx_line_search, iter);
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed_approx_ls = end - start;
-    verbose::show_results("Approx Line Search", x_opt_approx_ls, test_params, elapsed_approx_ls.count(), iter);
+    test_method("Approx Line Search (Armijo)", test_params, lr_approx_line_search);
 
+
+    // ADAM
+    double beta1 = 0.6;
+    double beta2 = 0.7;
+    size_t iter = 0; // iterations counter
+
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<double> result = adam(test_params, iter, beta1, beta2, 0.001);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    verbose::show_results("ADAM", result, test_params, elapsed.count(), iter);
+
+
+    verbose::dotted_separator();
+    
     return 0;
+}
+
+
+template <typename LRUpdateMethod>
+void test_method(std::string test_name, Parameters test_params, LRUpdateMethod method){
+    size_t iter = 0; // iterations counter
+    auto start = std::chrono::high_resolution_clock::now();
+    std::vector<double> result = eval(test_params, method, iter);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    verbose::show_results(test_name, result, test_params, elapsed.count(), iter);
 }
