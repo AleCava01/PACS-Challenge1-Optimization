@@ -9,6 +9,7 @@
 #include "../include/verbose.hpp"
 #include "../include/tests.hpp"
 
+
 template <typename LRUpdateMethod>
 void test_method(std::string test_name, Parameters test_params, LRUpdateMethod method);
 
@@ -51,12 +52,12 @@ int main() {
 
 
 
-     // HEAVY BALL METHOD
+      // HEAVY BALL METHOD
 
     Parameters test_params_hb = test1(); 
     size_t iter_hb = 0; 
     double eta = 0.9;
-
+/* 
     std::cout << "==== About to run Heavy-Ball method ====" << std::endl;
 
 
@@ -65,7 +66,7 @@ int main() {
     auto end_hb = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed_hb= end_hb - start_hb;
     verbose::show_results("Heavy Ball", result_hb, test_params_hb, elapsed_hb.count(), iter_hb);
-
+ */
     return 0;
 
 }
