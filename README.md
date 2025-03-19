@@ -2,6 +2,7 @@
 
 # Challenge 1. A gradient method for the minimization of a multivariate function
 With this challenge we weke tasked to implement a gradient-based optimization method to find the minimum of a differentiable multivariate function $f:\mathbb R^n \to \mathbb R$.
+We decided to implement the following methods: 
 
 ## Current issues / Observations
 - The method is highly sensitive to the $\alpha_0$ parameter when using the exponential or inverse decay learning rate update methods.
