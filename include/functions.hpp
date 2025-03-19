@@ -11,20 +11,20 @@
 // --- LEARNING RATE UPDATE FUNCTIONS -----------------------------------------------
 
 // No update, keeps alpha constant
-void lr_constant(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x){}
+void lr_constant(double& alpha_k, size_t& k,const Parameters& params, std::vector<double>& x){}
 
 // Exponential decay learning rate
-void lr_exp_decay(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x){
+void lr_exp_decay(double& alpha_k, size_t& k,const Parameters& params, std::vector<double>& x){
     alpha_k = params.alpha_zero * std::exp(-(*params.mu) * k);
 }
 
 // Inverse decay learning rate
-void lr_inv_decay(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x){
+void lr_inv_decay(double& alpha_k, size_t& k,const Parameters& params, std::vector<double>& x){
     alpha_k = params.alpha_zero / (1+ (*params.mu) * k);
 }
 
 // Approximate line search using Armijo rule
-void lr_approx_line_search(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x) {
+void lr_approx_line_search(double& alpha_k, size_t& k,const Parameters& params, std::vector<double>& x) {
     alpha_k = 1;
     std::vector<double> grad = params.grad_func(x);
     double grad_norm_sq = 0;
@@ -37,6 +37,7 @@ void lr_approx_line_search(double& alpha_k, size_t& k, Parameters& params, std::
     while (!armijo_condition(x, grad, alpha_k,grad_norm_sq) && alpha_k > alpha_min) {
         alpha_k /= 2;
     }
+    //verbose::debugging(k,norm2(vec_subtract(x,x)),norm2(params.grad_func(x)),alpha_k);
 }
 
 // --- GRADIENT METHOD IMPLEMENTATION  ---------------------------------------------

@@ -9,3 +9,5 @@ With this challenge we weke tasked to implement a gradient-based optimization me
 - Armijo Rule has to be seen again, it's working very badly
 - Number of iterations has to be added to the optimization result table
 
+## Sources
+[Kingma, D. P., & Ba, J. (2017). Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980.](https://arxiv.org/pdf/1412.6980)
