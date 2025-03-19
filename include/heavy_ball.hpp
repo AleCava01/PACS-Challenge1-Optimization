@@ -26,7 +26,7 @@ std::vector<double> heavy_ball(Parameters& params, LRUpdateMethod alpha_update, 
 
         // Update d_{k+1} = eta*d_k - alpha_k*grad_new
         // First do: d = eta*d
-        d = vec_scaler(d,eta)
+        d = vec_scaler(d,eta);
 
         // do again: d = d - alpha_k * grad_new
         // note that d is now eta*d_k
@@ -41,7 +41,7 @@ std::vector<double> heavy_ball(Parameters& params, LRUpdateMethod alpha_update, 
             x[i] += d[i];
         }
 
-        } 
+    }while(norm2(vec_subtract(x,x_old))>=params.eps_s && k<params.k_max && norm2(params.grad_func(x))>=params.eps_r);
 
     return x;
 }

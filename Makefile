@@ -1,4 +1,14 @@
-CXX      ?= g++
+# look for the first C++ compilator available
+ifneq ($(shell which clang++),)
+    CXX = clang++
+else ifneq ($(shell which g++),)
+    CXX = g++
+else ifneq ($(shell which cl),)
+    CXX = cl
+else
+    $(error Nessun compilatore C++ trovato!)
+endif
+
 CXXFLAGS ?= -std=c++20
 
 

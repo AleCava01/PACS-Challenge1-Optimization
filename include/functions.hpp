@@ -11,22 +11,21 @@
 // --- LEARNING RATE UPDATE FUNCTIONS -----------------------------------------------
 
 // No update, keeps alpha constant
-void lr_constant(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x){}
+void lr_constant(double& alpha_k, size_t& k, const Parameters& params, std::vector<double>& x){}
 
 // Exponential decay learning rate
-void lr_exp_decay(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x){
+void lr_exp_decay(double& alpha_k, size_t& k, const Parameters& params, std::vector<double>& x){
     alpha_k = params.alpha_zero * std::exp(-(*params.mu) * k);
 }
 
 // Inverse decay learning rate
-void lr_inv_decay(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x){
+void lr_inv_decay(double& alpha_k, size_t& k, const Parameters& params, std::vector<double>& x){
     alpha_k = params.alpha_zero / (1+ (*params.mu) * k);
 }
 
 // Approximate line search using Armijo rule
-void lr_approx_line_search(double& alpha_k, size_t& k, Parameters& params, std::vector<double>& x) {
+void lr_approx_line_search(double& alpha_k, size_t& k, const Parameters& params, std::vector<double>& x) {
     
-    alpha_k = 0.1;  //Then, at the end of each iteration, the step size found this time is not passed to the next iteration. In other words, each iteration starts with a backtracking search from 0.1 (or 1). If the function has high curvature or if σ is set relatively strictly, each round may have to reduce the step size multiple times to meet the Armijo condition, resulting in a large number of iterations and a long time.
     std::vector<double> grad = params.grad_func(x);
     double grad_norm_sq = 0;
     for(size_t i = 0; i<grad.size(); ++i){grad_norm_sq += (grad[i]*grad[i]);}
@@ -42,7 +41,7 @@ void lr_approx_line_search(double& alpha_k, size_t& k, Parameters& params, std::
 // --- GRADIENT METHOD IMPLEMENTATION  ---------------------------------------------
 
 template <typename LRUpdateMethod>
-std::vector<double> eval(Parameters& params, LRUpdateMethod alpha_update, size_t& k) {
+std::vector<double> eval(const Parameters& params, LRUpdateMethod alpha_update, size_t& k) {
     k = 0; // reset iterations counter
     double alpha_k=params.alpha_zero;
     std::vector<double> x = params.x0;
@@ -72,14 +71,15 @@ std::vector<double> eval(Parameters& params, LRUpdateMethod alpha_update, size_t
 
 
 // ADAM
-std::vector<double> adam(Parameters& params, size_t& k, double beta1, double beta2, double alpha) {
+std::vector<double> adam(const Parameters& params, size_t& k, const double beta1, const double beta2, double alpha) {
     k = 0;
     double eps = 1e-8;
-    std::vector<double> m = {0,0};
-    std::vector<double> v = {0,0};
+    auto x = params.x0;
+    std::vector<double> m(x.size(), 0.0);
+    std::vector<double> v(x.size(), 0.0);
+    std::vector<double> grad_squared;
     auto m_scaled = m;
     auto v_scaled = v;
-    auto x = params.x0;
     std::vector<double> grad;
     std::vector<double> x_old = x;
     do{
@@ -88,8 +88,8 @@ std::vector<double> adam(Parameters& params, size_t& k, double beta1, double bet
         grad = params.grad_func(x);
 
         m = vec_sum(vec_scaler(m,beta1), vec_scaler(grad,1-beta1));
-        ew_square(grad); // turns grad into the hadamard product of grad * grad.
-        v = vec_sum(vec_scaler(v,beta2), vec_scaler(grad,1-beta2));
+        grad_squared = ew_square(grad); // turns grad into the hadamard product of grad * grad.
+        v = vec_sum(vec_scaler(v,beta2), vec_scaler(grad_squared,1-beta2));
 
         m_scaled = vec_scaler(m,(1/(1-std::pow(beta1,k))));
         v_scaled = vec_scaler(v,(1/(1-std::pow(beta2,k))));

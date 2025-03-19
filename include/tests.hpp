@@ -22,7 +22,7 @@ Parameters test1(){
     test_params.eps_s = 1e-6;
     test_params.alpha_zero = 0.1; // set to 0.1 instead of 1. The method appears to be highly sensitive to this parameter.
     test_params.x0 = {0.0, 0.0};
-    test_params.k_max = 100;
+    test_params.k_max = 10000;
     test_params.mu = 1e-3;
     test_params.sigma = 0.1;
     return test_params;
