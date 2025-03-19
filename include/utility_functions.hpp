@@ -25,10 +25,12 @@ std::vector<double> vec_sum(std::vector<double> v1, const std::vector<double>& v
     return v1;
 };
 
-void ew_square(std::vector<double>& vec){
+std::vector<double> ew_square(std::vector<double>& vec){
+    std::vector<double> result(vec.size(), 0.0);
     for(size_t i = 0; i<vec.size(); ++i){
-        vec[i] *= vec[i];
+        result[i] = vec[i]*vec[i];
     }
+    return result;
 }
 
 // L2 Norm (Euclidean norm, sqrt of sum of squares of vector elements)

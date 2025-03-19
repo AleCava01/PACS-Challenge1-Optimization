@@ -35,12 +35,13 @@ int main() {
 
 
     // ADAM
-    double beta1 = 0.6;
-    double beta2 = 0.7;
+    double beta1 = 0.9; // suggested test value
+    double beta2 = 0.999;
+    double alpha_0 = 0.001;
     size_t iter = 0; // iterations counter
 
     auto start = std::chrono::high_resolution_clock::now();
-    std::vector<double> result = adam(test_params, iter, beta1, beta2, 0.001);
+    std::vector<double> result = adam(test_params, iter, beta1, beta2,alpha_0);
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     verbose::show_results("ADAM", result, test_params, elapsed.count(), iter);

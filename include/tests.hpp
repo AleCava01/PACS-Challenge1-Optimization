@@ -10,7 +10,7 @@ Parameters test1(){
     Parameters test_params;
     test_params.n = 2;
     test_params.func = [](const std::vector<double>& x) {
-        return 2 * x[0] * x[1] + 4 * std::pow(x[0], 4) + std::pow(2 * x[1], 2) + 2 * x[0];
+        return 2 * x[0] * x[1] + 4 * std::pow(x[0], 4) + 2 * std::pow(x[1], 2) + 2 * x[0];
     };
     test_params.grad_func = [](const std::vector<double>& x) -> std::vector<double> {
         return {
@@ -22,9 +22,9 @@ Parameters test1(){
     test_params.eps_s = 1e-6;
     test_params.alpha_zero = 0.1; // set to 0.1 instead of 1. The method appears to be highly sensitive to this parameter.
     test_params.x0 = {0.0, 0.0};
-    test_params.k_max = 10000;
+    test_params.k_max = 100;
     test_params.mu = 1e-3;
-    test_params.sigma = 0.3;
+    test_params.sigma = 0.1;
     return test_params;
 }
 
