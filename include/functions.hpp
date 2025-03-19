@@ -31,6 +31,7 @@ void lr_approx_line_search(double& alpha_k, size_t& k, Parameters& params, std::
     for(size_t i = 0; i<grad.size(); ++i){grad_norm_sq += (grad[i]*grad[i]);}
     double alpha_min = 1e-3;
     auto armijo_condition = [&params](const auto& x, const auto& grad, double alpha_k, double grad_norm_sq) {
+        // sufficient decrease condition
         return params.func(x) - params.func(vec_subtract(x, vec_scaler(grad, alpha_k))) >= (*params.sigma) * alpha_k * grad_norm_sq;
     };
     while (!armijo_condition(x, grad, alpha_k,grad_norm_sq) && alpha_k > alpha_min) {

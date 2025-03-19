@@ -2,6 +2,7 @@
 
 # Clean previous builds
 make clean
+make distclean
 
 # Compile the project
 make

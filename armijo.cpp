@@ -4,10 +4,10 @@
 #include <cmath>
 #include <chrono>
 #include <vector>
-#include "../include/parameters.hpp"
-#include "../include/functions.hpp"
-#include "../include/verbose.hpp"
-#include "../include/tests.hpp"
+#include "include/parameters.hpp"
+#include "include/functions.hpp"
+#include "include/verbose.hpp"
+#include "include/tests.hpp"
 
 using namespace std;
 
