@@ -6,7 +6,7 @@
   <a href="https://img.shields.io/badge/GNU Make-3.27.6-blue"><img src="https://img.shields.io/badge/GNU Make-4.3-blue" alt="make"></a>
   <a href="https://img.shields.io/badge/clang-18.1.3-blue"><img src="https://img.shields.io/badge/clang-18.1.3-blue" alt="clang"></a>
 </p>
-With this challenge we weke tasked to implement a gradient-based optimization method to find the minimum of a differentiable multivariate function $f:\mathbb R^n \to \mathbb R$.
+With this challenge we weke tasked to implement a gradient-based optimization method to find the minimum of a differentiable multivariate function .
 
 We decided to implement the following methods: 
 - Gradient method with different learning rate update methods:
@@ -14,6 +14,7 @@ We decided to implement the following methods:
   - Inverse Decay Method
   - Exponential Decay Method
   - Approximate Line Search, using the Armijo Method
+- Heavy-ball Method
 - ADAM
 
 ## Project Structure and Implementation Choices
@@ -85,23 +86,7 @@ ADAM                          [-0.100744, 0.050325]         -0.206150           
 ***************************************************************************************************************************
 ```
 ## Current issues / Observations
-- The method is highly sensitive to the $\alpha_0$ parameter when using the exponential or inverse decay learning rate update methods.
-
-Solution：
-
-In the early stages of iteration, \(\alpha_k\) is directly determined by \(\alpha_0\):
-- **Exponential decay**: \(\alpha_k = \alpha_0 \cdot e^{-\mu k}\)
-- **Inverse decay**: \(\alpha_k = \frac{\alpha_0}{1 + \mu k}\)
-
-If \(\alpha_0\) is set too large, then in the first few iterations the step size will also be relatively large, potentially causing overshoot, which can lead to oscillations in the function value or even divergence. Conversely, if \(\alpha_0\) is set too small, the early convergence speed will be very slow, and as the decay formula proceeds, \(\alpha_k\) quickly shrinks to a very small value, causing the algorithm to “stall” and making it difficult to converge to a better solution.
-
-The remedy is to moderately reduce \(\alpha_0\).In the code, we can reduce it to 0.1. If we keep it at 1 for certain functions (especially the example \(f(x) = 2x_1 x_2 + 4x_1^4 + 2x_2^2 + 2x_1\)), overshoot may occur in the very first iterations, potentially causing the function value to increase rather than decrease.
-
-
-
-
-
-
+- The method is highly sensitive to the $\alpha_0$ parameter when using the constant, exponential or inverse decay learning rate update methods.
 - Exponential decay and inverse decay require a very small $\mu$, significantly lower than the value suggested in the challenge description.
 - ADAM is much less efficient ad precise than expected
 
