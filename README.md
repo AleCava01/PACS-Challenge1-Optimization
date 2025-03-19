@@ -85,7 +85,23 @@ ADAM                          [-0.100744, 0.050325]         -0.206150           
 ***************************************************************************************************************************
 ```
 ## Current issues / Observations
-- The method is highly sensitive to the $\alpha_0$ parameter when using the constant, exponential or inverse decay learning rate update methods.
+- The method is highly sensitive to the $\alpha_0$ parameter when using the exponential or inverse decay learning rate update methods.
+
+Solution：
+
+In the early stages of iteration, \(\alpha_k\) is directly determined by \(\alpha_0\):
+- **Exponential decay**: \(\alpha_k = \alpha_0 \cdot e^{-\mu k}\)
+- **Inverse decay**: \(\alpha_k = \frac{\alpha_0}{1 + \mu k}\)
+
+If \(\alpha_0\) is set too large, then in the first few iterations the step size will also be relatively large, potentially causing overshoot, which can lead to oscillations in the function value or even divergence. Conversely, if \(\alpha_0\) is set too small, the early convergence speed will be very slow, and as the decay formula proceeds, \(\alpha_k\) quickly shrinks to a very small value, causing the algorithm to “stall” and making it difficult to converge to a better solution.
+
+The remedy is to moderately reduce \(\alpha_0\).In the code, we can reduce it to 0.1. If we keep it at 1 for certain functions (especially the example \(f(x) = 2x_1 x_2 + 4x_1^4 + 2x_2^2 + 2x_1\)), overshoot may occur in the very first iterations, potentially causing the function value to increase rather than decrease.
+
+
+
+
+
+
 - Exponential decay and inverse decay require a very small $\mu$, significantly lower than the value suggested in the challenge description.
 - ADAM is much less efficient ad precise than expected
 
