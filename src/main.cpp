@@ -10,19 +10,19 @@
 #include "../include/verbose.hpp"
 #include "../include/tests.hpp"
 
-
+#define RED "\033[31m"
+#define RESET "\033[0m"
 
 template <typename LRUpdateMethod>
 void test_gradient_method(std::string test_name, Parameters test_params, LRUpdateMethod method);
+Parameters menu();
 
 int main() {
 
     // TESTING PARAMETERS
-    Parameters test_params = test1(); // test1 and test2 are available
-
+    Parameters test_params=menu();
+    
     // GRADIENT METHOD WITH DIFFERENT LEARNING RATE UPDATE METHODS
-
-    verbose::print_header_result("test 1");
 
     // Inverse decay method
     test_gradient_method("Inverse Decay", test_params, lr_inv_decay);
@@ -76,4 +76,29 @@ void test_gradient_method(std::string test_name, Parameters test_params, LRUpdat
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double> elapsed = end - start;
     verbose::show_results(test_name, result, test_params, elapsed.count(), iter);
+}
+
+Parameters menu(){
+    int choice;
+    
+    do{
+        std::cout << "Select a test to perform:\n";
+        std::cout << "1. Test 1 (2xy+4x^4+2y^2+2x)\n";
+        std::cout << "2. Test 2 (x^2+y^2+2xy)\n";
+        std::cout << "3. Test 3 (x1^2+2*x2^2+ 3*x3^2+4*x4^3+sin(x5)+e^{-x5^2})\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        if (choice == 1) {
+            verbose::print_header_result("Test 1 (2xy+4x^4+2y^2+2x)");
+            return test1();
+        } else if (choice == 2) {
+            verbose::print_header_result("Test 2 (x^2+y^2+2xy)");
+            return test2();
+        } else if (choice == 3) {
+            verbose::print_header_result("Test 3 (x1^2+2*x2^2+ 3*x3^2+4*x4^3+sin(x5)+e^{-x5^2})");
+            return test3();
+        } else {
+            std::cerr << RED << "\nTest not available. Please select a valid option.\n" << RESET << std::endl;
+        }
+    }while(true);
 }

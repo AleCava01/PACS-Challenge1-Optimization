@@ -14,28 +14,28 @@ namespace verbose {
     void dotted_separator(){
         std::cout << "***************************************************************************************************************************" << std::endl;
     }
-    void print_header_result(std::string testname){
+    void print_header_result(const std::string& testname){
         dotted_separator();
         std::cout << "OPTIMIZATION RESULTS - " << testname << std::endl;
         dotted_separator();
         // Print the headers with fixed width for neat columns
-        std::cout << std::setw(30) << std::left << "Method"
-                  << std::setw(30) << std::left << "x_opt"
-                  << std::setw(20) << std::left << "min value"
+        std::cout << std::setw(35) << std::left << "Method"
+                  << std::setw(15) << std::left << "min value"
                   << std::setw(15) << std::left << "residual"
                   << std::setw(15) << std::left << "time" 
-                  << std::setw(15) << std::left << "iterations" << std::endl;
+                  << std::setw(15) << std::left << "iterations" 
+                  << std::setw(30) << std::left << "x_opt"<< std::endl;
         std::cout << "---------------------------------------------------------------------------------------------------------------------------" << std::endl;
     }
 
     void show_results(const std::string& method_name, const std::vector<double>& x_opt, const Parameters& params, const double time, const size_t iter) {
         // Print results with fixed width for proper column alignment
-        std::cout << std::setw(30) << std::left << method_name
-                  << std::setw(30) << std::left << vectorToString(x_opt)
-                  << std::setw(20) << std::fixed << std::setprecision(6) << params.func(x_opt)
+        std::cout << std::setw(35) << std::left << method_name
+                  << std::setw(15) << std::fixed << std::setprecision(6) << params.func(x_opt)
                   << std::setw(15) << std::fixed << std::setprecision(6) << norm2(params.grad_func(x_opt))
                   << std::setw(15) << std::fixed << std::setprecision(6) << time
                   << std::setw(15) << std::left << std::setprecision(6) << iter
+                  << std::setw(30) << std::left << vectorToString(x_opt)
                   << std::endl;
         std::cout << "---------------------------------------------------------------------------------------------------------------------------" << std::endl;
     }
