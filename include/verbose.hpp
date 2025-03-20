@@ -14,9 +14,9 @@ namespace verbose {
     void dotted_separator(){
         std::cout << "***************************************************************************************************************************" << std::endl;
     }
-    void print_header_result(){
+    void print_header_result(std::string testname){
         dotted_separator();
-        std::cout << "OPTIMIZATION RESULTS " << std::endl;
+        std::cout << "OPTIMIZATION RESULTS - " << testname << std::endl;
         dotted_separator();
         // Print the headers with fixed width for neat columns
         std::cout << std::setw(30) << std::left << "Method"
@@ -68,6 +68,6 @@ namespace verbose {
     }
 }
 
-#include "utility_functions.hpp"
+#include "utils.hpp"
 
 #endif // VERBOSE_HPP

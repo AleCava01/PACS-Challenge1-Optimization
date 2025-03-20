@@ -24,7 +24,7 @@ Parameters test1(){
     test_params.x0 = {0.0, 0.0};
     test_params.k_max = 10000;
     test_params.mu = 1e-3;
-    test_params.sigma = 0.1;
+    test_params.sigma = 0.2;
     return test_params;
 }
 
