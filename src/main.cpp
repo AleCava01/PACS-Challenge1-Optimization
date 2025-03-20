@@ -48,7 +48,6 @@ int main() {
     std::chrono::duration<double> elapsed_hb= end_hb - start_hb;
     verbose::show_results("Heavy Ball", result_hb, test_params, elapsed_hb.count(), iter);
 
-
     // ADAM
 
     // the following parameters are set to the value suggested in
