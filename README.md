@@ -38,9 +38,12 @@ challenge1-gasati/
 ```
 
 - Template functions were preferred over a class-based implementation primarily for educational purposes, to deepen understanding of generic programming concepts.
-- Optional type parameters were added to the struct definitions in the parameters.hpp file to enhance flexibility and adaptability.
+- Extra methods like ADAM and Heavy Ball Method required specific parameters that couldn't be fitted into template functions. consequently, we decided to treat them separately in a dedicated extra_methods file.
+- Parameters.hpp is solely used to declare the Parameters struct; parameter values are set by the functions in tests.hpp.
+- Optional type parameters were added to the struct definition in the parameters.hpp file to enhance flexibility and adaptability.
 - A collection of pre-defined test parameters has been provided in the tests.hpp file, enabling easy access to a variety of test cases for different scenarios (now selectable from the start menu).
 - We opted to assess the efficiency of different methods using std::chrono::high_resolution_clock for timing measurements.
+- All verbose output has been grouped into a dedicated namespace for better code organization and readibility.
 - run is a Linux executable file that automatizes make clean, make distclean and main running procedure.
 
 # Setup (Linux)
@@ -72,6 +75,8 @@ Run the program:
 
 # Notes
 ## Results
+Result for test1: the test case specified in the challenge description.
+
 ```
 ***************************************************************************************************************************
 OPTIMIZATION RESULTS - Test 1 (2xy+4x^4+2y^2+2x)
@@ -93,7 +98,7 @@ ADAM                               -0.885694      0.000754       0.003479       
 ***************************************************************************************************************************
 ```
 ## Current issues / Observations
-- The method is highly sensitive to the $\alpha_0$ parameter when using the constant, exponential or inverse decay learning rate update methods.
+- The gradient method is highly sensitive to the $\alpha_0$ parameter when using the constant, exponential or inverse decay learning rate update methods.
 - Exponential decay and inverse decay require a very small $\mu$, significantly lower than the value suggested in the challenge description.
 - ADAM performs worse than expected in terms of efficiency and precision on simple functions (test1 and test2) but shows better performance in higher-dimensional cases (test3).
 
