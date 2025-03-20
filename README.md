@@ -22,13 +22,17 @@ We decided to implement the following methods:
 challenge1-gasati/
 ├── src/
 │   ├── main.cpp
+│   ├── utils.cpp
+│   ├── extra_methods.cpp
 ├── include/
-│   ├── functions.hpp
+│   ├── gradient_methods.hpp
+│   ├── extra_methods.hpp
 |   ├── parameters.hpp
 │   ├── tests.hpp
-│   ├── utility_functions.hpp
+│   ├── utils.hpp
 │   ├── verbose.hpp
 ├── Makefile
+├── run
 ├── LICENSE
 └── README.md
 ```
@@ -37,6 +41,7 @@ challenge1-gasati/
 - Optional type parameters were added to the struct definitions in the parameters.hpp file to enhance flexibility and adaptability.
 - A collection of pre-defined test parameters has been provided in the tests.hpp file, enabling easy access to a variety of test cases for different scenarios (just change the test number in main.cpp file).
 - We opted to assess the efficiency of different methods using std::chrono::high_resolution_clock for timing measurements.
+- run is a Linux executable file that automatizes make clean, make distclean and main running procedure.
 
 # Setup (Linux)
 ### Prerequisites
@@ -69,19 +74,21 @@ Run the program:
 ## Results
 ```
 ***************************************************************************************************************************
-OPTIMIZATION RESULTS
+OPTIMIZATION RESULTS - test 1
 ***************************************************************************************************************************
 Method                        x_opt                         min value           residual       time           iterations
 ---------------------------------------------------------------------------------------------------------------------------
-Inverse Decay                 [-0.541578, 0.270788]         -0.885694           0.000004       0.002602       30
+Inverse Decay                 [-0.541578, 0.270788]         -0.885694           0.000004       0.000039       30
 ---------------------------------------------------------------------------------------------------------------------------
-Exponential Decay             [-0.541578, 0.270788]         -0.885694           0.000004       0.000059       30
+Exponential Decay             [-0.541578, 0.270788]         -0.885694           0.000004       0.000033       30
 ---------------------------------------------------------------------------------------------------------------------------
-Constant Rate                 [-0.541578, 0.270788]         -0.885694           0.000005       0.000015       29
+Constant Rate                 [-0.541578, 0.270788]         -0.885694           0.000005       0.000016       29
 ---------------------------------------------------------------------------------------------------------------------------
 Approx Line Search (Armijo)   [-0.541578, 0.270788]         -0.885694           0.000005       0.000030       29
 ---------------------------------------------------------------------------------------------------------------------------
-ADAM                          [-0.100744, 0.050325]         -0.206150           2.084290       0.000164       100
+Heavy Ball                    [-0.541581, 0.270785]         -0.885694           0.000047       0.000146       222
+---------------------------------------------------------------------------------------------------------------------------
+ADAM                          [-0.541521, 0.270760]         -0.885694           0.000754       0.002183       1169
 ---------------------------------------------------------------------------------------------------------------------------
 ***************************************************************************************************************************
 ```
