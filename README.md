@@ -95,7 +95,7 @@ ADAM                               -0.885694      0.000754       0.003479       
 ## Current issues / Observations
 - The method is highly sensitive to the $\alpha_0$ parameter when using the constant, exponential or inverse decay learning rate update methods.
 - Exponential decay and inverse decay require a very small $\mu$, significantly lower than the value suggested in the challenge description.
-- ADAM is much less efficient ad precise than expected
+- ADAM performs worse than expected in terms of efficiency and precision on simple functions (test1 and test2) but shows better performance in higher-dimensional cases (test3).
 
 ## Idea / Possible Future Development
 - Implement an automatic fine tuner
