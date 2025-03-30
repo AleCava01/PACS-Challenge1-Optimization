@@ -13,7 +13,6 @@ std::vector<double> heavy_ball(const Parameters& params, size_t& k,const double 
     
     std::vector<double> d = vec_scaler(grad,-alpha_k); //initial direction
 
-    
     do{
         k++;
         x_old = x; // make of x before updating it
